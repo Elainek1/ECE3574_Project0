@@ -23,13 +23,14 @@ int main(int argc, char*argv[])
 	}
 	else
 	{
-		//otherwise no filename was specified so return with exit failure
+		cout << "Error: No filename specified" << endl; //no filename specified so return with exit failure
 		return EXIT_FAILURE;
 	}
 	//opens file
 	ifstream ins(filename, std::ios::binary);
 	if(!ins)
 	{
+		cout << "Error: Could not open file" << endl;
 		return EXIT_FAILURE; //if file doesnt open then return
 	}
 	uint8_t value;  //used to read in each character
