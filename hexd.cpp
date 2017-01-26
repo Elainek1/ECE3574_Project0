@@ -36,8 +36,7 @@ int main(int argc, char*argv[])
 	}
 	else
 	{
-		filename = "temp.txt";
-		//return EXIT_FAILURE;
+		return EXIT_FAILURE;
 	}
 	
 	ifstream ins(filename, std::ios::binary);
