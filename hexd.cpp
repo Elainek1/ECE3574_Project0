@@ -21,8 +21,7 @@ using namespace std;
 int main(int argc, char*argv[])
 {
 	string filename;
-	char inputChar;
-    std::vector<std::string>  arguments;
+	std::vector<std::string>  arguments;
     for(int i = 0; i < argc; ++i)
 	{
 		arguments.push_back(argv[i]);
@@ -92,6 +91,28 @@ int main(int argc, char*argv[])
 		ins.read(reinterpret_cast<std::fstream::char_type*>(&value), sizeof value);
 
 	}
-	
+	if(count%16==0)
+	{
+		return EXIT_SUCCESS;
+	}
+	int numSpaces = 0;
+	numSpaces = 2*(16-count%16)+(16-count%16)/2;
+	if(count%16%2)
+	{
+		numSpaces++;
+	}
+	for(int i = 0; i<numSpaces; i++)
+	{
+		cout << " ";
+	}
+	if(count%16)
+	{
+		for(int i = 0; i < (count%16); i++)
+			{
+				cout << lines[i];
+			}
+			cout << endl;
+	}
+
     return EXIT_SUCCESS;
 }
