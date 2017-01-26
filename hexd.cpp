@@ -1,15 +1,3 @@
-/*#include <fstream>
-
-int main()
-{
-
-	std::ofstream outs("temp.txt");
-	outs << "This is a line of text.\nThis is another.\n";
-	outs.close();
-	   
-	return 0;
-}*/
-
 #include <vector>
 #include <string>
 #include <iostream>
@@ -20,98 +8,91 @@ using namespace std;
 
 int main(int argc, char*argv[])
 {
-	string filename;
+	string filename;  //for storing the filename grabbed from commandline
 	std::vector<std::string>  arguments;
     for(int i = 0; i < argc; ++i)
 	{
 		arguments.push_back(argv[i]);
-		//cout << argv[i] << endl;
-		//count++;
 	}
     // code can use arguments as a C++ vector of C++ strings 
+	
+	//if there are more than one arguments grab the last one and use that for the filename
 	if(argc > 1)
 	{
-		//ofstream outs(arguments[count-1]);
 		filename = arguments[argc-1];
 	}
 	else
 	{
+		//otherwise no filename was specified so return with exit failure
 		return EXIT_FAILURE;
 	}
-	
+	//opens file
 	ifstream ins(filename, std::ios::binary);
 	if(!ins)
 	{
-		return EXIT_FAILURE;
+		return EXIT_FAILURE; //if file doesnt open then return
 	}
-	uint8_t value;
-	uint8_t lines[16];
-	ins.read(reinterpret_cast<std::fstream::char_type*>(&value), sizeof value);
+	uint8_t value;  //used to read in each character
+	uint8_t lines[16];  //used to hold each line of characters to print out at the end
+	ins.read(reinterpret_cast<std::fstream::char_type*>(&value), sizeof value);  //gets character
 	
+	//used to count how many characters
 	int count = 0;
-	
-	while(!ins.fail())
+	while(!ins.fail())  //keep looping till end of file
 	{
-		
-		if((count % 16) == 0)
+		if((count % 16) == 0)  //print out the address at the beginning of each line
 		{
 			cout << hex << setw(7) << setfill('0') << count << ": ";
 		}
-		//cout << value << endl;
-		cout << hex << setw(2) << setfill('0') << (int)value;
-		if((value > 31) && (value < 127))
+		cout << hex << setw(2) << setfill('0') << (int)value;  //print out the hex value of the character read in
+		if((value > 31) && (value < 127))  //if it has an ascii char associated then store as is in the array
 		{
 			lines[count%16] = value;
-			//cout << lines[count%16] << endl;
 		}
-		else
+		else  //otherwise replace character in array with .
 		{
 			lines[count%16] = 46;
-			//cout << lines[count%16] << endl;
 		}
 		
-		if(count%2)
+		if(count%2) //after every two character read in put a space
 		{
 			cout << " ";
 		}
-
-		count++;
-		if((count%16) == 0)
+		count++; //incrememnt count
+		if((count%16) == 0)  //if line is filled up then print the ascii line
 		{
+			cout << " ";
 			for(int i = 0; i < 16; i++)
 			{
 				cout << lines[i];
 			}
 			cout << endl;
 		}
-		//cout << inputChar << endl;
-
-		//ins >> inputChar;
-		ins.read(reinterpret_cast<std::fstream::char_type*>(&value), sizeof value);
-
+		ins.read(reinterpret_cast<std::fstream::char_type*>(&value), sizeof value);  //read in next character
 	}
-	if(count%16==0)
+	if(count%16==0)  //if it ends on a full characters line then we finish
 	{
 		return EXIT_SUCCESS;
 	}
+	//otherwise we have to calculate the spaces and print out the last half characters line
 	int numSpaces = 0;
-	numSpaces = 2*(16-count%16)+(16-count%16)/2;
+	numSpaces = 2*(16-count%16)+(16-count%16)/2;  //calculate number of spaces needed to fill the not full line
 	if(count%16%2)
 	{
 		numSpaces++;
 	}
-	for(int i = 0; i<numSpaces; i++)
+	for(int i = 0; i<numSpaces; i++)  //print the spaces
 	{
 		cout << " ";
 	}
-	if(count%16)
+	if(count%16)  //then loop and print the last half character line
 	{
+		cout << " ";
 		for(int i = 0; i < (count%16); i++)
 			{
 				cout << lines[i];
 			}
 			cout << endl;
 	}
-
-    return EXIT_SUCCESS;
+    return EXIT_SUCCESS;  //return success
 }
